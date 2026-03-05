@@ -1,0 +1,18 @@
+[
+  {
+    "title": "Connections Remaining",
+    "value": 190,
+    "footer": "10/200 used",
+    "progress": 90
+  },
+  {
+    "title": "Ready to Ask",
+    "value": 4,
+    "footer": "Remaining questions"
+  },
+  {
+    "title": "Total Questions Asked",
+    "value": 50,
+    "footer": "Your activity this month"
+  }
+]
