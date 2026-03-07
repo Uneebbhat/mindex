@@ -19,12 +19,20 @@ import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
 import useTogglePassword from "@/hooks/useTogglePassword";
 import Link from "next/link";
+import useSignup from "../hooks/useSignup";
+import { Spinner } from "@/components/ui/spinner";
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const { showPassword, handleTogglePassword } = useTogglePassword();
+  const {
+    formData,
+    loading,
+    handleOnChange,
+    handleOnSubmit
+  } = useSignup()
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -36,7 +44,9 @@ export function SignupForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form
+            onSubmit={handleOnSubmit}
+          >
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="name">Full Name</FieldLabel>
@@ -46,6 +56,8 @@ export function SignupForm({
                   placeholder="John Doe"
                   required
                   name="name"
+                  onChange={handleOnChange}
+                  value={formData.name}
                 />
               </Field>
               <Field>
@@ -56,6 +68,8 @@ export function SignupForm({
                   placeholder="m@example.com"
                   required
                   name="email"
+                  onChange={handleOnChange}
+                  value={formData.email}
                 />
               </Field>
               <Field>
@@ -67,6 +81,8 @@ export function SignupForm({
                       type={showPassword ? "text" : "password"}
                       required
                       name="password"
+                      onChange={handleOnChange}
+                      value={formData.password}
                     />
                     {showPassword ? (
                       <EyeOff
@@ -86,7 +102,14 @@ export function SignupForm({
                 Must be at least 8 characters long.
               </FieldDescription>
               <Field>
-                <Button>Create Account</Button>
+                <Button disabled={loading || !formData.name || !formData.email || !formData.password}>
+                  {
+                    loading ? <>
+                      <Spinner />
+                      Create Account
+                    </> : "Create Account"
+                  }
+                </Button>
                 <FieldDescription className="text-center">
                   Already have an account? <Link href="/login">Login</Link>
                 </FieldDescription>

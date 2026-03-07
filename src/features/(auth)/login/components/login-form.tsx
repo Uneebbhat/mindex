@@ -19,12 +19,20 @@ import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
 import useTogglePassword from "@/hooks/useTogglePassword";
 import Link from "next/link";
+import useLogin from "../hooks/useLogin";
+import { Spinner } from "@/components/ui/spinner";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const { showPassword, handleTogglePassword } = useTogglePassword();
+  const {
+    formData,
+    loading,
+    handleOnChange,
+    handleOnSubmit
+  } = useLogin()
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -36,7 +44,9 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form
+            onSubmit={handleOnSubmit}
+          >
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -46,6 +56,8 @@ export function LoginForm({
                   placeholder="m@example.com"
                   required
                   name="email"
+                  onChange={handleOnChange}
+                  value={formData.email}
                 />
               </Field>
               <Field>
@@ -57,6 +69,8 @@ export function LoginForm({
                       type={showPassword ? "text" : "password"}
                       required
                       name="password"
+                      onChange={handleOnChange}
+                      value={formData.password}
                     />
                     {showPassword ? (
                       <EyeOff
@@ -76,7 +90,14 @@ export function LoginForm({
                 Must be at least 8 characters long.
               </FieldDescription>
               <Field>
-                <Button>Login</Button>
+                <Button disabled={loading || !formData.email || !formData.password}>
+                  {
+                    loading ? <>
+                      <Spinner />
+                      Login
+                    </> : "Login"
+                  }
+                </Button>
                 <FieldDescription className="text-center">
                   Don&apos;t have an account?{" "}
                   <Link href="/signup">Sign up</Link>
